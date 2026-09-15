@@ -66,7 +66,7 @@ button {
   padding: 0.45rem 0.9rem;
   border-radius: 6px;
   border: 1px solid var(--accent);
-  background: var(-- accent);
+  background: var(--accent);
   color: #fff;
   cursor: pointer;
 }
@@ -90,7 +90,7 @@ th,
 td {
   text-align: left;
   padding: 0.5rem;
-  border-bottom: 1px solid var(-- line);
+  border-bottom: 1px solid var(--line);
   vertical-align: top;
 }
 .tabs [aria-selected='true'] {
