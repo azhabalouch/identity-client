@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { ShieldCheck } from 'lucide-react';
 import { api } from '../api';
 import { useAuth } from '../auth';
+import AuthLayout from '../components/AuthLayout';
+import { findPersona } from '../personas';
 
 export default function Authorise() {
   const { user } = useAuth();
@@ -62,42 +65,65 @@ export default function Authorise() {
     }
   }
 
+  const label = findPersona(persona)?.label || persona;
+
   if (error)
     return (
-      <p role="alert" className="error">
-        {error}
-      </p>
+      <AuthLayout>
+        <p role="alert" className="alert-error">
+          {error}
+        </p>
+      </AuthLayout>
     );
-  if (!client) return <p role="status">Loading…</p>;
+  if (!client)
+    return (
+      <AuthLayout>
+        <p role="status">Loading…</p>
+      </AuthLayout>
+    );
 
   return (
-    <section className="card">
-      <h1>Allow access?</h1>
-      <p>
+    <AuthLayout>
+      <ShieldCheck aria-hidden="true" size={40} className="mb-2 text-accent" />
+      <h1 className="text-2xl font-bold">Allow access?</h1>
+      <p className="mt-2">
         <strong>{client.client_name}</strong> ({client.registered_domain}) wants
-        to use your <strong>{persona}</strong> persona.
+        to use your <strong>{label}</strong> persona.
       </p>
-      <p>
+      <p className="mt-1 text-sm">
         Permission requested: <code>{scope}</code>
       </p>
-      <h2>It will see</h2>
-      <ul>
-        {preview.map((a) => (
-          <li key={a.attribute_key}>
-            {a.label}: {a.attribute_value}
-          </li>
-        ))}
-      </ul>
-      <p>
-        It will not see your other personas or any private attribute. You can
+
+      <h2 className="card-title mt-6 mb-2">It will see</h2>
+      {preview.length === 0 ? (
+        <p className="text-muted">
+          No details. Private details are never shared.
+        </p>
+      ) : (
+        <ul className="card py-2">
+          {preview.map((a) => (
+            <li
+              key={a.attribute_key}
+              className="grid grid-cols-[9rem_minmax(0,1fr)] gap-3 border-t border-line py-2 first:border-t-0"
+            >
+              <span className="text-sm text-muted">{a.label}</span>
+              <span className="break-all">{a.attribute_value}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      <p className="mt-3 text-sm text-muted">
+        It will not see your other personas or any private detail. You can
         withdraw access at any time on the Active grants page.
       </p>
-      <button type="button" onClick={approve}>
-        Allow
-      </button>
-      <button type="button" className="secondary" onClick={deny}>
-        Deny
-      </button>
-    </section>
+      <div className="mt-6 flex gap-2">
+        <button type="button" className="btn btn-primary" onClick={approve}>
+          Allow
+        </button>
+        <button type="button" className="btn btn-ghost" onClick={deny}>
+          Deny
+        </button>
+      </div>
+    </AuthLayout>
   );
 }

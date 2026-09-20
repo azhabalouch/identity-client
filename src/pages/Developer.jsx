@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api';
+import PageHead from '../components/PageHead';
+
+const LIST = 'grid gap-x-4 gap-y-2 sm:grid-cols-[9rem_minmax(0,1fr)]';
 
 export default function Developer() {
   const [clients, setClients] = useState([]);
@@ -32,58 +35,99 @@ export default function Developer() {
       setError(err.message);
     }
   }
+
   return (
-    <section>
-      <h1>Register an application</h1>
-      <form onSubmit={register}>
-        <label htmlFor="client-name">Application name</label>
-        <input
-          id="client-name"
-          required
-          minLength={3}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <label htmlFor="client-domain">Registered domain (origin)</label>
-        <input
-          id="client-domain"
-          required
-          placeholder="https://app.example.com"
-          value={domain}
-          onChange={(e) => setDomain(e.target.value)}
-        />
-        {error && (
-          <p role="alert" className="error">
-            {error}
-          </p>
-        )}
-        <button type="submit">Register</button>
-      </form>
+    <>
+      <PageHead title="Developer">
+        Register an application that will read personas through the API.
+      </PageHead>
+
+      <section className="card mb-4">
+        <h2 className="card-title">Register an application</h2>
+        <form onSubmit={register} className="mt-4 grid max-w-md gap-4">
+          <div className="field">
+            <label htmlFor="client-name" className="label">
+              Application name
+            </label>
+            <input
+              id="client-name"
+              className="input"
+              required
+              minLength={3}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="client-domain" className="label">
+              Registered domain (origin)
+            </label>
+            <input
+              id="client-domain"
+              className="input"
+              required
+              placeholder="https://app.example.com"
+              value={domain}
+              onChange={(e) => setDomain(e.target.value)}
+            />
+          </div>
+          {error && (
+            <p role="alert" className="alert-error">
+              {error}
+            </p>
+          )}
+          <div>
+            <button type="submit" className="btn btn-primary">
+              Register
+            </button>
+          </div>
+        </form>
+      </section>
+
       {created && (
-        <div className="card" role="alert">
-          <h2>Copy your secret now</h2>
-          <p>
-            Client ID: <code>{created.client_id}</code>
-          </p>
-          <p>
-            Client secret: <code>{created.client_secret}</code>
-          </p>
-          <p>{created.note}</p>
-          <p>
-            Authorisation link for gaming:
-            <br />
-            <code>{`${window.location.origin}/authorise?client_id=${created.client_id}&persona=gaming&redirect_uri=${created.registered_domain}/callback`}</code>
-          </p>
-        </div>
+        <section className="card mb-4 border-accent" role="alert">
+          <h2 className="card-title mb-3">Copy your secret now</h2>
+          <dl className={LIST}>
+            <dt className="text-muted">Client ID</dt>
+            <dd className="break-all">
+              <code>{created.client_id}</code>
+            </dd>
+            <dt className="text-muted">Client secret</dt>
+            <dd className="break-all">
+              <code>{created.client_secret}</code>
+            </dd>
+            <dt className="text-muted">Gaming link</dt>
+            <dd className="break-all">
+              <code>{`${window.location.origin}/authorise?client_id=${created.client_id}&persona=gaming&redirect_uri=${created.registered_domain}/callback`}</code>
+            </dd>
+          </dl>
+          <p className="mt-3 text-sm">{created.note}</p>
+        </section>
       )}
-      <h2>Your applications</h2>
-      <ul>
-        {clients.map((c) => (
-          <li key={c.client_id}>
-            {c.client_name} — <code>{c.client_id}</code> — {c.registered_domain}
-          </li>
-        ))}
-      </ul>
-    </section>
+
+      <section className="card">
+        <h2 className="card-title mb-2">Your applications</h2>
+        {clients.length === 0 ? (
+          <p className="text-muted">You have not registered an application.</p>
+        ) : (
+          <ul>
+            {clients.map((c) => (
+              <li
+                key={c.client_id}
+                className="flex flex-wrap items-center justify-between gap-2 border-t border-line py-3 first:border-t-0"
+              >
+                <span className="grid">
+                  <strong>{c.client_name}</strong>
+                  <span className="text-sm text-muted">
+                    {c.registered_domain}
+                  </span>
+                </span>
+                <code className="text-sm break-all">{c.client_id}</code>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+    </>
   );
 }

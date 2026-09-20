@@ -33,6 +33,7 @@ export default [
       ...reactPlugin.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
       'react/react-in-jsx-scope': 'off', // Not required for React 17+
+      'react/prop-types': 'off', // React 19 no longer checks propTypes
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },

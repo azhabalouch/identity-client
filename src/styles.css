@@ -1,129 +1,122 @@
+@import 'tailwindcss';
+
+/* 1. Colour values. Dark values follow the operating system setting. */
 :root {
-  --ink: #1b1f24;
-  --muted: #57606a;
-  --line: #d0d7de;
-  --accent: #0b5cad;
-  --bg: #ffffff;
-  --error: #b42318;
+  --bg: #f4f6fa;
+  --surface: #ffffff;
+  --soft: #f8fafc;
+  --line: #e2e8f0;
+  --ink: #0f172a;
+  --muted: #64748b;
+  --accent: #1d5fe0;
+  --accent-ink: #ffffff;
+  --accent-soft: #e8f0fe;
+  --danger: #b42318;
+  --danger-soft: #fdecea;
+  --professional: #1d5fe0;
+  --personal: #7c3aed;
+  --gaming: #0f8a5f;
+  color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --ink: #e6edf3;
-    --muted: #9da7b1;
-    --line: #3d444d;
-    --accent: #6cb6ff;
-    --bg: #0d1117;
-    --error: #ff7b72;
+    --bg: #0b1220;
+    --surface: #111a2b;
+    --soft: #16213a;
+    --line: #26324a;
+    --ink: #e6ebf3;
+    --muted: #97a3b8;
+    --accent: #6ea8ff;
+    --accent-ink: #0b1220;
+    --accent-soft: #1a2a4a;
+    --danger: #ff8a80;
+    --danger-soft: #3a1c1c;
+    --professional: #6ea8ff;
+    --personal: #b69cff;
+    --gaming: #4cd6a2;
+    color-scheme: dark;
   }
 }
-* {
-  box-sizing: border-box;
+
+/* 2. Make the values available as Tailwind colours: bg-surface, text-muted ... */
+@theme inline {
+  --color-page: var(--bg);
+  --color-surface: var(--surface);
+  --color-soft: var(--soft);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-professional: var(--professional);
+  --color-personal: var(--personal);
+  --color-gaming: var(--gaming);
 }
-body {
-  margin: 0;
-  font:
-    16px/1.5 system-ui,
-    -apple-system,
-    'Segoe UI',
-    sans serif;
-  color: var(--ink);
-  background: var(--bg);
+
+/* 3. Page defaults. */
+@layer base {
+  body {
+    @apply bg-page text-[15px] text-ink antialiased;
+    font-family:
+      system-ui,
+      -apple-system,
+      'Segoe UI',
+      Roboto,
+      sans-serif;
+  }
+  a {
+    @apply text-accent;
+  }
+  :focus-visible {
+    @apply outline-3 outline-offset-2 outline-accent;
+  }
 }
-header nav {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 0.75rem 1.5rem;
-  border-bottom: 1px solid var(--line);
-}
-main {
-  max-width: 60rem;
-  margin: 0 auto;
-  padding: 1.5rem;
-}
-a {
-  color: var(--accent);
-}
-label {
-  display: block;
-  margin-top: 0.75rem;
-  font-weight: 600;
-}
-input,
-select {
-  font: inherit;
-  padding: 0.4rem 0.5rem;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  background: var(--bg);
-  color: var(--ink);
-  max-width: 100%;
-}
-button {
-  font: inherit;
-  margin: 0.5rem 0.5rem 0 0;
-  padding: 0.45rem 0.9rem;
-  border-radius: 6px;
-  border: 1px solid var(--accent);
-  background: var(--accent);
-  color: #fff;
-  cursor: pointer;
-}
-button.secondary,
-nav button {
-  background: transparent;
-  color: var(--accent);
-}
-:focus-visible {
-  outline: 3px solid var(--accent);
-  outline-offset: 2px;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-  display: block;
-  overflow-x: auto;
-}
-th,
-td {
-  text-align: left;
-  padding: 0.5rem;
-  border-bottom: 1px solid var(--line);
-  vertical-align: top;
-}
-.tabs [aria-selected='true'] {
-  background: var(--accent);
-  color: #fff;
-}
-.tabs button {
-  background: transparent;
-  color: var(--accent);
-}
-.inline label {
-  display: inline-block;
-  margin-right: 0.25rem;
-}
-.card {
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 1rem 1.25rem;
-  margin-top: 1rem;
-}
-.error {
-  color: var(--error);
-}
-.skip {
-  position: absolute;
-  left: -999px;
-}
-.skip:focus {
-  left: 1rem;
-  top: 1rem;
-  background: var(--bg);
-  padding: 0.5rem;
-}
-code {
-  word-break: break-all;
+
+/* 4. Repeated patterns, so each page stays short. */
+@layer components {
+  .card {
+    @apply rounded-xl border border-line bg-surface p-5 shadow-xs;
+  }
+  .card-title {
+    @apply text-base font-bold;
+  }
+  .field {
+    @apply grid gap-1.5;
+  }
+  .label {
+    @apply text-sm font-semibold;
+  }
+  .input {
+    @apply min-h-10 w-full rounded-lg border border-line bg-surface px-3 py-2 text-ink;
+  }
+  .btn {
+    @apply inline-flex min-h-10 cursor-pointer whitespace-nowrap items-center justify-center gap-2 rounded-lg border border-transparent px-4 py-2 font-semibold no-underline disabled:cursor-wait disabled:opacity-60;
+  }
+  .btn-primary {
+    @apply bg-accent text-accent-ink hover:brightness-110;
+  }
+  .btn-ghost {
+    @apply border-line bg-transparent text-accent hover:bg-soft;
+  }
+  .btn-danger {
+    @apply bg-danger-soft text-danger;
+  }
+  .icon-btn {
+    @apply inline-grid size-9 cursor-pointer place-items-center rounded-lg text-muted hover:bg-soft hover:text-ink;
+  }
+  .badge {
+    @apply inline-block rounded-full border border-line bg-soft px-2 py-0.5 text-xs font-semibold text-muted;
+  }
+  .badge-accent {
+    @apply border-transparent bg-accent-soft text-accent;
+  }
+  .alert-error {
+    @apply rounded-lg bg-danger-soft px-3 py-2 text-danger;
+  }
+  .status {
+    @apply mb-4 rounded-lg bg-accent-soft px-3 py-2 empty:hidden;
+  }
 }

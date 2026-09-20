@@ -14,6 +14,15 @@ const NAME_TYPES = [
 ];
 const title = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
+// The same three reads as before, moved outside the component.
+function fetchPersona(base, ctx) {
+  return Promise.all([
+    api(`${base}/personas/${ctx}`),
+    api(`/attribute-definitions?context=${ctx}`),
+    api(`${base}/names?context=${ctx}`),
+  ]);
+}
+
 export default function Dashboard() {
   const { user } = useAuth();
   const base = `/users/${user.id}`;
@@ -23,22 +32,32 @@ export default function Dashboard() {
   const [names, setNames] = useState([]);
   const [message, setMessage] = useState('');
 
+  // Used after a name is added or removed.
   async function load(ctx) {
-    const [persona, defs, nameData] = await Promise.all([
-      api(`${base}/personas/${ctx}`),
-      api(`/attribute-definitions?context=${ctx}`),
-      api(`${base}/names?context=${ctx}`),
-    ]);
-
+    const [persona, defs, nameData] = await fetchPersona(base, ctx);
     setAttributes(persona.attributes);
     setDefinitions(defs);
     setNames(nameData.names);
   }
 
+  // Runs when the persona changes. State is set only inside .then(), after the
+  // server replies, so no setState call runs directly in the effect body.
   useEffect(() => {
+    fetchPersona(base, context)
+      .then(([persona, defs, nameData]) => {
+        setAttributes(persona.attributes);
+        setDefinitions(defs);
+        setNames(nameData.names);
+      })
+      .catch((err) => setMessage(err.message));
+  }, [base, context]);
+
+  // The old effect cleared the message when the persona changed.
+  // The tab click now does this instead.
+  function switchContext(c) {
     setMessage('');
-    load(context).catch((err) => setMessage(err.message));
-  }, [context]);
+    setContext(c);
+  }
 
   async function saveAttributes(changes, note) {
     try {
@@ -90,7 +109,7 @@ export default function Dashboard() {
             type="button"
             role="tab"
             aria-selected={c === context}
-            onClick={() => setContext(c)}
+            onClick={() => switchContext(c)}
           >
             {title(c)}
           </button>
@@ -165,7 +184,7 @@ export default function Dashboard() {
             <button
               type="button"
               onClick={() => removeName(n.id)}
-              arialabel={`Remove ${n.name_value}`}
+              aria-label={`Remove ${n.name_value}`}
             >
               Remove
             </button>
