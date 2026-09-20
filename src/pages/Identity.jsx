@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { api } from '../api';
 import { useAuth } from '../auth';
 import Avatar from '../components/Avatar';
+import DeleteAccount from '../components/DeleteAccount';
 import PageHead from '../components/PageHead';
 import { findPersona } from '../personas';
 
@@ -91,6 +92,8 @@ export default function Identity() {
           </ul>
         )}
       </section>
+
+      <DeleteAccount />
     </>
   );
 }

@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 
-/* 1. Colour values. Dark values follow the operating system setting. */
+/* 1. Colour values. public/theme.js sets data-theme on <html> before the page
+   draws: the saved choice from the theme button, or else the system setting. */
 :root {
   --bg: #f4f6fa;
   --surface: #ffffff;
@@ -18,24 +19,22 @@
   --gaming: #0f8a5f;
   color-scheme: light;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0b1220;
-    --surface: #111a2b;
-    --soft: #16213a;
-    --line: #26324a;
-    --ink: #e6ebf3;
-    --muted: #97a3b8;
-    --accent: #6ea8ff;
-    --accent-ink: #0b1220;
-    --accent-soft: #1a2a4a;
-    --danger: #ff8a80;
-    --danger-soft: #3a1c1c;
-    --professional: #6ea8ff;
-    --personal: #b69cff;
-    --gaming: #4cd6a2;
-    color-scheme: dark;
-  }
+:root[data-theme='dark'] {
+  --bg: #0b1220;
+  --surface: #111a2b;
+  --soft: #16213a;
+  --line: #26324a;
+  --ink: #e6ebf3;
+  --muted: #97a3b8;
+  --accent: #6ea8ff;
+  --accent-ink: #0b1220;
+  --accent-soft: #1a2a4a;
+  --danger: #ff8a80;
+  --danger-soft: #3a1c1c;
+  --professional: #6ea8ff;
+  --personal: #b69cff;
+  --gaming: #4cd6a2;
+  color-scheme: dark;
 }
 
 /* 2. Make the values available as Tailwind colours: bg-surface, text-muted ... */

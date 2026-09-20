@@ -1,5 +1,6 @@
 import { ShieldUser } from 'lucide-react';
 import { APP_NAME } from '../personas';
+import ThemeToggle from './ThemeToggle';
 
 // Two-column layout for the sign-in, sign-up and authorisation screens.
 export default function AuthLayout({ children }) {
@@ -19,7 +20,8 @@ export default function AuthLayout({ children }) {
           which apps can see each one.
         </p>
       </aside>
-      <main id="main" className="grid place-items-center bg-surface">
+      <main id="main" className="relative grid place-items-center bg-surface">
+        <ThemeToggle className="absolute top-4 right-4" />
         <div className="w-full max-w-md px-6 py-12">{children}</div>
       </main>
     </div>

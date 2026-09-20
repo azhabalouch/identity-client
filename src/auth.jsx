@@ -6,6 +6,7 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [ready, setReady] = useState(false);
+  const [notice, setNotice] = useState('');
 
   useEffect(() => {
     // After a page reload the token is gone from memory; the cookie restores it.
@@ -24,7 +25,18 @@ export function AuthProvider({ children }) {
       body: { email, password },
     });
     setAccessToken(data.access_token);
+    setNotice('');
     setUser(data.user);
+  }
+
+  // DELETE /users/{id}: the server removes the account and every persona.
+  async function deleteAccount() {
+    await api(`/users/${user.id}`, { method: 'DELETE' });
+    // The refresh cookie is scoped to /api/v1/auth, so logout clears it.
+    await api('/auth/logout', { method: 'POST' }).catch(() => {});
+    setAccessToken(null);
+    setNotice('Your account has been deleted.');
+    setUser(null); // RequireAuth then sends the browser to the sign-in page
   }
 
   async function signOut() {
@@ -34,7 +46,9 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, ready, signIn, signOut }}>
+    <AuthContext.Provider
+      value={{ user, ready, notice, signIn, signOut, deleteAccount }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -6,7 +6,7 @@ import EmailField from '../components/EmailField';
 import PasswordField from '../components/PasswordField';
 
 export default function SignIn() {
-  const { signIn } = useAuth();
+  const { signIn, notice } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [email, setEmail] = useState('');
@@ -31,6 +31,11 @@ export default function SignIn() {
     <AuthLayout>
       <h1 className="text-2xl font-bold">Welcome back</h1>
       <p className="text-muted">Sign in to continue to your dashboard.</p>
+      {notice && (
+        <p role="status" className="status mt-4 mb-0">
+          {notice}
+        </p>
+      )}
 
       <form onSubmit={submit} className="mt-6 grid gap-4">
         <EmailField value={email} onChange={(e) => setEmail(e.target.value)} />

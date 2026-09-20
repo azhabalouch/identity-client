@@ -13,6 +13,7 @@ import {
 import { useAuth } from '../auth';
 import { APP_NAME, PERSONAS } from '../personas';
 import Avatar from './Avatar';
+import ThemeToggle from './ThemeToggle';
 
 const MAIN_LINKS = [
   { to: '/', label: 'Dashboard', Icon: LayoutDashboard, end: true },
@@ -98,6 +99,7 @@ export default function AppShell() {
 
       <div className="min-w-0">
         <header className="flex items-center justify-end gap-4 border-b border-line bg-surface px-4 py-3 md:px-8">
+          <ThemeToggle />
           <span className="flex min-w-0 items-center gap-2 font-semibold">
             <Avatar name={user.email} />
             <span className="hidden truncate sm:inline">{user.email}</span>
